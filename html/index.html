@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Make Template Factory</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: #101827;
+      color: white;
+      font-family: Arial, sans-serif;
+    }
+    .container {
+      width: 100%;
+      max-width: 550px;
+      padding: 30px;
+      border: 1px solid #34445d;
+      border-radius: 18px;
+      background: #1b293d;
+    }
+    h1 { color: #70b7ff; }
+    p { color: #c5d0df; line-height: 1.5; }
+    label { display: block; margin: 18px 0 8px; }
+    input, textarea {
+      width: 100%;
+      padding: 13px;
+      border: 1px solid #52647d;
+      border-radius: 8px;
+      background: #101827;
+      color: white;
+      font-size: 15px;
+    }
+    textarea { min-height: 130px; resize: vertical; }
+    button {
+      width: 100%;
+      margin-top: 20px;
+      padding: 14px;
+      border: 0;
+      border-radius: 8px;
+      background: #2685e8;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    button:disabled { opacity: .6; cursor: wait; }
+    #message { margin-top: 15px; }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <h1>Make Template Factory</h1>
+    <p>Décris l'automatisation que tu souhaites créer.</p>
+
+    <form id="ideaForm">
+      <label for="name">Ton nom</label>
+      <input id="name" name="name" required>
+
+      <label for="email">Ton adresse email</label>
+      <input id="email" name="email" type="email" required>
+
+      <label for="idea">Quelle automatisation souhaites-tu ?</label>
+      <textarea id="idea" name="idea"
+        placeholder="Exemple : automatiser les commandes de ma boutique..."
+        required></textarea>
+
+      <button id="sendButton" type="submit">
+        Envoyer ma demande
+      </button>
+    </form>
+
+    <p id="message" role="status"></p>
+  </main>
+
+  <script>
+    const WEBHOOK_URL = "https://hook.eu1.make.com/jp7fh9cj9rvmp3kkuafcx00t92ktrajv";
+
+    const form = document.getElementById("ideaForm");
+    const button = document.getElementById("sendButton");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      if (WEBHOOK_URL.includes("COLLE_ICI")) {
+        message.textContent = "Configure d'abord l'URL du Webhook Make.";
+        return;
+      }
+
+      button.disabled = true;
+      message.textContent = "Envoi en cours...";
+
+      const data = {
+        name: form.name.value.trim(),
+        email: form.email.value.trim(),
+        idea: form.idea.value.trim()
+      };
+
+      try {
+        const response = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data)
+        });
+
+        if (!response.ok) throw new Error("HTTP " + response.status);
+
+        message.textContent = "Demande envoyée avec succès !";
+        form.reset();
+      } catch (error) {
+        message.textContent =
+          "Envoi impossible. Vérifie le Webhook Make et la connexion.";
+      } finally {
+        button.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
