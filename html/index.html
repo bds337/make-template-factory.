@@ -65,6 +65,15 @@
       <label for="email">Ton adresse email</label>
       <input id="email" name="email" type="email" required>
 
+      <label for="productUrl">URL de ton produit</label>
+      <input
+        id="productUrl"
+        name="productUrl"
+        type="url"
+        placeholder="https://exemple.com/produit"
+        required
+      >
+
       <label for="idea">Quelle automatisation souhaites-tu ?</label>
       <textarea id="idea" name="idea"
         placeholder="Exemple : automatiser les commandes de ma boutique..."
@@ -99,6 +108,7 @@
       const data = {
         name: form.name.value.trim(),
         email: form.email.value.trim(),
+        productUrl: form.productUrl.value.trim(),
         idea: form.idea.value.trim()
       };
 
